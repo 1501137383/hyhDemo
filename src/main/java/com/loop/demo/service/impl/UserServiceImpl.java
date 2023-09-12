@@ -9,6 +9,7 @@ import com.loop.demo.util.JwtUtil;
 import com.loop.demo.vo.JwtAuthenticationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class UserServiceImpl extends ServiceImpl<UserRepository, User> implements UserService {
 
     private final JwtUtil jwtUtil;
+
+    private final RedisTemplate redisTemplate;
 
     @Override
     public String createAuthenticationToken(JwtAuthenticationRequest jwtAuthenticationRequest) {

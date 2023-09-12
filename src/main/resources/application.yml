@@ -5,15 +5,13 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
     default-property-inclusion: non_null
-#  redis:
-#    database: 2
-#    host: ${REDIS_HOST:localhost}
-#    password:
-#    port: ${REDIS_PORT:6379}
-#    pool:
-#    max-active: 20
+  redis:
+    database: 2
+    host: ${REDIS_HOST:localhost}
+    password:
+    port: ${REDIS_PORT:6379}
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:47.98.100.3}:${MYSQL_PORT:3306}/loop_admin_v1?useUnicode=true&characterEncoding=UTF8
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/loop_admin_v1?useUnicode=true&characterEncoding=UTF8
     username: zzy
     password: ZZY373890.
     #????????????????
