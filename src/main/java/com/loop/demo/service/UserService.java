@@ -9,6 +9,11 @@ public interface UserService extends IService<User> {
 
 
     String createAuthenticationToken(JwtAuthenticationRequest jwtAuthenticationRequest);
+
+    void verify(String token);
+
+    String refreshAndGetAuthenticationToken(String userToken);
+
 }
 
 

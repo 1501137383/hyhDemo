@@ -3,6 +3,15 @@ server:
 spring:
   application:
     name: loop-admin
+  redis:
+    database: 2
+    host: ${REDIS_HOST:47.98.100.3}
+    password:
+    port: ${REDIS_PORT:6379}
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/loop_admin_v1?useUnicode=true&characterEncoding=UTF8
+    username: root
+    password: 123456
 
 
 

@@ -41,6 +41,10 @@ public class BaseContextHandler {
         return returnObjectValue(obj);
     }
 
+    public static void removeToken() {
+        threadLocal.remove();
+    }
+
 
     private static String returnObjectValue(Object value) {
         return value == null ? null : value.toString();

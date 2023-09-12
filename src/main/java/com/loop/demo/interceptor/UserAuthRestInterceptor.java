@@ -6,6 +6,7 @@ import com.loop.demo.config.UserAuthConfig;
 import com.loop.demo.util.JwtUtil;
 import com.loop.demo.vo.JWTInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class UserAuthRestInterceptor implements HandlerInterceptor {
@@ -42,8 +44,10 @@ public class UserAuthRestInterceptor implements HandlerInterceptor {
         }
         //获取请求的uri
         String requestUri = request.getRequestURI();
+        log.info("requestUri:{}", requestUri);
         //获取请求的方式
         String method = request.getMethod();
+        log.info("method:{}", method);
         // 不进行拦截的地址
         if (this.isStartWith(requestUri)) {
             //不进行拦截的地址放行

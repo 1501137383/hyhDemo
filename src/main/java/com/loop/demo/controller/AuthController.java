@@ -1,6 +1,8 @@
 package com.loop.demo.controller;
 
 import com.loop.demo.common.RestResponse;
+import com.loop.demo.config.UserAuthConfig;
+import com.loop.demo.context.BaseContextHandler;
 import com.loop.demo.groups.JwtAuthenticationGroup;
 import com.loop.demo.service.UserService;
 import com.loop.demo.vo.JwtAuthenticationRequest;
@@ -26,6 +28,7 @@ public class AuthController {
 
     private final UserService userService;
 
+    private final UserAuthConfig userAuthConfig;
 
     /**
      * 获取用户的token
@@ -49,9 +52,10 @@ public class AuthController {
      * @throws Exception
      */
     @RequestMapping(value = "refresh", method = RequestMethod.GET)
-    public RestResponse<String> refreshAndGetAuthenticationToken(
-            HttpServletRequest request) throws Exception {
-        return new RestResponse<>();
+    public RestResponse<String> refreshAndGetAuthenticationToken(HttpServletRequest request) {
+        String token = request.getHeader(userAuthConfig.getTokenHeader());
+        String refreshedToken = userService.refreshAndGetAuthenticationToken(token);
+        return new RestResponse<String>().data(refreshedToken);
     }
 
     /**
@@ -62,7 +66,8 @@ public class AuthController {
      * @throws Exception
      */
     @RequestMapping(value = "verify", method = RequestMethod.GET)
-    public RestResponse<?> verify(String token) throws Exception {
+    public RestResponse<?> verify(String token) {
+        userService.verify(token);
         return new RestResponse<>();
     }
 }

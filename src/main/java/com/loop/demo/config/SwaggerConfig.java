@@ -16,7 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ip地址:端口号/swagger-ui.html
+ * 原生swagger-ui ip地址:端口号/swagger-ui.html
+ * 美化后ui: ip地址:端口号//doc.html
  * @author Administrator
  */
 @Configuration
@@ -36,7 +37,7 @@ public class SwaggerConfig {
                 .build()  //设置API分组
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .securityContexts(Collections.singletonList(securityContext()))
-                .groupName("对外接口文档")
+                .groupName("api-group")
                 //是否开启swagger 如果是false，浏览器将无法访问，默认是true
                 .enable(true)
                 ;

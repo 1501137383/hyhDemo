@@ -19,11 +19,11 @@ public class User implements Serializable {
     private Integer id;
 
     @TableField(value = "username")
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "test", name = "账号")
     private String username;
 
     @TableField(value = "password")
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "123456", name = "密码")
     private String password;
 
     @TableField(value = "name")
