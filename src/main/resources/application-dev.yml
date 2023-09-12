@@ -1,0 +1,18 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: loop-admin
+
+
+
+## 用户生成jwt字符串的secretKey
+jwt:
+  token-header: Authorization
+  expire: 14400000 #四个小时
+  rsa-secret: xx1WET12^%3^(WE45
+
+#不需要登录验证的地址
+url:
+  ignore:
+    startWith: /jwt

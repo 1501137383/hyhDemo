@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loop.demo.mapper.GateLogRepository">
+  <resultMap id="BaseResultMap" type="com.loop.demo.entity.GateLog">
+    <!--@mbg.generated-->
+    <!--@Table gate_log-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="menu" jdbcType="VARCHAR" property="menu" />
+    <result column="opt" jdbcType="VARCHAR" property="opt" />
+    <result column="uri" jdbcType="VARCHAR" property="uri" />
+    <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
+    <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
+    <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
+    <result column="request" jdbcType="VARCHAR" property="request" />
+    <result column="respone" jdbcType="VARCHAR" property="respone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, menu, opt, uri, crt_time, crt_user, crt_name, crt_host, request, respone
+  </sql>
+</mapper>
