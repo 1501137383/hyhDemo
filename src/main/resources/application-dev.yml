@@ -5,11 +5,11 @@ spring:
     name: loop-admin
   redis:
     database: 2
-    host: ${REDIS_HOST:47.98.11.3}
+    host: ${REDIS_HOST:localhost}
     password:
     port: ${REDIS_PORT:6379}
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:47.98.11.3}:${MYSQL_PORT:3306}/loop_admin_v1?useUnicode=true&characterEncoding=UTF8
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/loop_admin_v1?useUnicode=true&characterEncoding=UTF8
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
