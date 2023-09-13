@@ -11,6 +11,9 @@ public class BaseContextHandler {
 
     public static Object get(String key) {
         Map<String, Object> map = threadLocal.get();
+        if (map == null) {
+            map = new HashMap<>();
+        }
         return map.get(key);
     }
 
