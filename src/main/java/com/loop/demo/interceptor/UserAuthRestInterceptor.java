@@ -1,10 +1,22 @@
 package com.loop.demo.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.loop.demo.annotation.IgnoreUserToken;
 import com.loop.demo.config.UserAuthConfig;
+import com.loop.demo.constant.AdminConstant;
+import com.loop.demo.context.BaseContextHandler;
+import com.loop.demo.entity.Element;
+import com.loop.demo.entity.Menu;
+import com.loop.demo.exception.UserTokenException;
+import com.loop.demo.mapper.ElementRepository;
+import com.loop.demo.mapper.MenuRepository;
+import com.loop.demo.service.PermissionService;
 import com.loop.demo.util.JwtUtil;
 import com.loop.demo.vo.JWTInfo;
+import com.loop.demo.vo.PermissionInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +27,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +44,12 @@ public class UserAuthRestInterceptor implements HandlerInterceptor {
     private final UserAuthConfig userAuthConfig;
 
     private final JwtUtil jwtUtil;
+
+    private final MenuRepository menuRepository;
+
+    private final ElementRepository elementRepository;
+
+    private final PermissionService permissionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -77,9 +100,76 @@ public class UserAuthRestInterceptor implements HandlerInterceptor {
                 return false;
             }
         }
+
+        //校验用户菜单权限
+        List<PermissionInfo> permissionInfos = new ArrayList<>();
+        List<Menu> menus = menuRepository.selectList(null);
+        permissionInfos.addAll(menus.stream().map(menu -> {
+            PermissionInfo info = new PermissionInfo();
+            if (StringUtils.isBlank(menu.getHref())) {
+                menu.setHref("/" + menu.getCode());
+            }
+
+            info.setCode(menu.getCode());
+            info.setType(AdminConstant.RESOURCE_TYPE_MENU);
+            info.setName(AdminConstant.RESOURCE_ACTION_VISIT);
+            String uri = menu.getHref();
+            if (!uri.startsWith("/")) {
+                uri = "/" + uri;
+            }
+            info.setUri(uri);
+            info.setMethod(AdminConstant.RESOURCE_REQUEST_METHOD_GET);
+            info.setMenu(menu.getTitle());
+            return info;
+        }).collect(Collectors.toList()));
+        List<Element> elements = elementRepository.getAllElementPermissions();
+        permissionInfos.addAll(elements.stream().map(element -> {
+                    PermissionInfo info = new PermissionInfo();
+                    info.setCode(element.getCode());
+                    info.setType(element.getType());
+                    info.setUri(element.getUri());
+                    info.setMethod(element.getMethod());
+                    info.setName(element.getName());
+                    info.setMenu(element.getMenuId());
+                    return info;
+                }
+        ).collect(Collectors.toList()));
+        permissionInfos = getPermissionInfos(permissionInfos, requestUri, method);
+        if (permissionInfos.size() == 0) {
+            //否则抛异常
+            throw new UserTokenException("不存在的菜单");
+        }
+        //根据用户的id获取该用户所拥护的权限
+        permissionInfos = permissionService.getPermissionByUserId(infoFromToken.getUserId());
+        if (getPermissionInfos(permissionInfos, requestUri, method).size() == 0) throw new UserTokenException("用户无权限");
+
+        //如果有则放行
+        BaseContextHandler.setName(infoFromToken.getName());
+        BaseContextHandler.setUserId(infoFromToken.getUserId());
+        BaseContextHandler.setUserToken(token);
         return true;
     }
 
+
+    /**
+     * 判断用户的权限
+     *
+     * @param requestUri
+     * @param method
+     * @return
+     */
+    private List<PermissionInfo> getPermissionInfos(List<PermissionInfo> serviceInfo, final String requestUri, final String method) {
+        return new ArrayList<>(Collections2.filter(serviceInfo, new Predicate<PermissionInfo>() {
+            @Override
+            public boolean apply(PermissionInfo permissionInfo) {
+                String url = permissionInfo.getUri();
+                String uri = url.replaceAll("\\{\\*\\}", "[a-zA-Z\\\\d]+");
+                String regEx = "^" + uri + "$";
+                return (Pattern.compile(regEx).matcher(requestUri).find() || requestUri.startsWith(url + "/"))
+                        && method.equals(permissionInfo.getMethod());
+            }
+        }));
+    }
 
     /**
      * URI是否以什么打头

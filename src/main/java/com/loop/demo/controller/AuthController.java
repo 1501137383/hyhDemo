@@ -40,7 +40,7 @@ public class AuthController {
 
     @RequestMapping(value = "token", method = RequestMethod.POST)
     public RestResponse<?> createAuthenticationToken(@RequestBody @Validated(value = JwtAuthenticationGroup.tokenGroup.class) JwtAuthenticationRequest jwtAuthenticationRequest) {
-
+        log.info("创建token");
         return new RestResponse<>().data(userService.createAuthenticationToken(jwtAuthenticationRequest));
     }
 

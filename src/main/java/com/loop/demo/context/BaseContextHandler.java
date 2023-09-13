@@ -45,6 +45,19 @@ public class BaseContextHandler {
         threadLocal.remove();
     }
 
+    public static void setUserId(String userId) {
+        set(CommonConstants.CONTEXT_KEY_USER_ID, userId);
+    }
+
+    public static void setName(String name) {
+        set(CommonConstants.CONTEXT_KEY_USER_NAME, name);
+    }
+
+
+    public static void setUserToken(String token) {
+        set(CommonConstants.CONTEXT_KEY_USER_TOKEN, token);
+    }
+
 
     private static String returnObjectValue(Object value) {
         return value == null ? null : value.toString();
