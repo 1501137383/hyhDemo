@@ -11,6 +11,8 @@ public class Zoo {
     private Dog dog;
 
     public static void main(String[] args) {
+
+
         // Zoo zoo = new Zoo();
         // if (zoo != null) {
         //     Dog dog = zoo.getDog();
@@ -31,8 +33,6 @@ public class Zoo {
         // });
         // Integer age = zoo.getDog().getAge();
         // System.out.println("zoo.getDog().getAge() = " + age);
-
-
 
         Zoo zoo = new Zoo();
         zoo.setDog(new Dog(20));
